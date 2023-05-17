@@ -33,6 +33,14 @@ RSpec.describe GithubVerification::GithubVerificationController do
       expect(response.status).to eq(404)
     end
 
+    it "errors even when an admin attempts to connect on a user's behalf" do
+      sign_in(Fabricate(:admin))
+
+      get "/github-verification", params: { user_id: user.id, code: "abc" }
+
+      expect(response.status).to eq(404)
+    end
+
     it "saves the users GitHub username in a custom field and redirects properly" do
       sign_in(user)
 

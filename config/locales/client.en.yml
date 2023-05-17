@@ -9,3 +9,4 @@ en:
       instructions:
         connect: "Click here to connect your GitHub account to your profile."
         clear: "Your GitHub account is connected."
+        cannot_connect_for_others: "You cannot connect a GitHub account on someone else's behalf."

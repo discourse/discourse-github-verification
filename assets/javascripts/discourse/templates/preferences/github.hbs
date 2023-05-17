@@ -17,17 +17,22 @@
           "discourse_github_verification.instructions.clear"
         }}</p>
     {{else}}
-      {{!  <div>  }}
-      {{!  </div>  }}
-      <DButton
-        @action={{action this.login}}
-        @icon="fab-github"
-        @class="btn-primary github-verification-btn"
-        @label="discourse_github_verification.connect"
-      />
-      <p class="instructions">{{i18n
-          "discourse_github_verification.instructions.connect"
-        }}</p>
+      {{#if (eq this.currentUser.id this.model.id)}}
+        <DButton
+          @action={{action this.login}}
+          @icon="fab-github"
+          @class="btn-primary github-verification-btn"
+          @label="discourse_github_verification.connect"
+        />
+        <p class="instructions">{{i18n
+            "discourse_github_verification.instructions.connect"
+          }}</p>
+      {{else}}
+        <p>{{i18n
+            "discourse_github_verification.instructions.cannot_connect_for_others"
+          }}</p>
+
+      {{/if}}
     {{/if}}
   </div>
 </div>

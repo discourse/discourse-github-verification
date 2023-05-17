@@ -8,6 +8,10 @@ module GithubVerification
     skip_before_action :check_xhr, only: :auth_callback
 
     def auth_callback
+      # We already checked if the user can edit the other user, but now lets make
+      # sure that even admin don't connect a GitHub account on behalf of another user.
+      raise Discourse::NotFound if current_user.id != @user.id
+
       access_code = fetch_access_code
       github_username = fetch_username(access_code)
       if github_username.blank?
