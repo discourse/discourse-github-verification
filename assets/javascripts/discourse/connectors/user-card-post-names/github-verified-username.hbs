@@ -1,0 +1,7 @@
+{{#if this.user.custom_fields.github_verified_username}}
+  <div class="github-verified-username">
+    <GithubUserLink
+      @username={{this.user.custom_fields.github_verified_username}}
+    />
+  </div>
+{{/if}}

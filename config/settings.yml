@@ -1,4 +1,9 @@
 plugins:
-  plugin_name_enabled:
+  discourse_github_verification_enabled:
     default: true
     client: true
+  discourse_github_verification_client_id:
+    default: ""
+    client: true
+  discourse_github_verification_client_secret:
+    default: ""
