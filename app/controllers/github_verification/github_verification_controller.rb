@@ -15,7 +15,7 @@ module GithubVerification
       access_code = fetch_access_code
       github_username = fetch_username(access_code)
       if github_username.blank?
-        raise Discourse::InvalidParameters.new("Github username must be present")
+        raise Discourse::InvalidParameters.new("GitHub username must be present")
       end
 
       @user.custom_fields[VERIFIED_GITHUB_USERNAME_FIELD] = github_username
@@ -45,14 +45,11 @@ module GithubVerification
           t.response :json
         end
 
-      response =
-        conn.post("/login/oauth/access_token") do |req|
-          req.body = {
-            client_id: SiteSetting.discourse_github_verification_client_id,
-            client_secret: SiteSetting.discourse_github_verification_client_secret,
-            code: params[:code],
-          }.to_json
-        end
+      response = conn.post("/login/oauth/access_token", {
+        client_id: SiteSetting.discourse_github_verification_client_id,
+        client_secret: SiteSetting.discourse_github_verification_client_secret,
+        code: params[:code],
+      })
 
       response_body = Rack::Utils.parse_nested_query(response.body)
       response_body["access_token"]

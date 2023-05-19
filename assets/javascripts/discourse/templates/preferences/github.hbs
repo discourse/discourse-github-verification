@@ -1,36 +1,36 @@
 <div class="control-group github-username">
-  <label class="control-label" for="edit-github-username">{{i18n
-      "discourse_github_verification.username"
-    }}</label>
+  <label class="control-label" for="edit-github-username">
+    {{i18n "discourse_github_verification.username"}}
+  </label>
   <div class="controls">
     {{#if this.githubUsername}}
       <div class="github-username-control-wrapper">
         <GithubUserLink @username={{this.githubUsername}} />
         <DButton
-          @action={{action this.clear}}
+          @action={{this.clear}}
           @class="btn-secondary clear-github-verification-btn"
           @icon="trash-alt"
           @title="discourse_github_verification.clear"
         />
       </div>
-      <p class="instructions">{{i18n
-          "discourse_github_verification.instructions.clear"
-        }}</p>
+      <p class="instructions">
+        {{i18n "discourse_github_verification.instructions.clear"}}
+      </p>
     {{else}}
       {{#if (eq this.currentUser.id this.model.id)}}
         <DButton
-          @action={{action this.login}}
+          @action={{this.login}}
           @icon="fab-github"
           @class="btn-primary github-verification-btn"
           @label="discourse_github_verification.connect"
         />
-        <p class="instructions">{{i18n
-            "discourse_github_verification.instructions.connect"
-          }}</p>
+        <p class="instructions">
+          {{i18n "discourse_github_verification.instructions.connect"}}
+        </p>
       {{else}}
-        <p>{{i18n
-            "discourse_github_verification.instructions.cannot_connect_for_others"
-          }}</p>
+        <p>
+        {{i18n "discourse_github_verification.instructions.cannot_connect_for_others"}}
+        </p>
       {{/if}}
     {{/if}}
   </div>

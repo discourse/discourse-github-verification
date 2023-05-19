@@ -4,7 +4,7 @@ en:
       username: "GitHub Account"
       connect: "Connect"
       github: "GitHub"
-      clear: "Disconnect this Gitub account from your profile"
+      clear: "Disconnect this GitHub account from your profile"
       clear_confirmation: "Are you sure you want to disconnect this GitHub account from your profile?"
       instructions:
         connect: "Click here to connect your GitHub account to your profile."

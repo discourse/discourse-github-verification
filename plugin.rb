@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 # name: discourse-github-verification
-# about: TODO
+# about: Verifies that a user owns a given GitHub account
 # version: 0.0.1
 # authors: Discourse (markvanlan)
-# url: TODO
+# url: https://github.com/discourse/discourse-github-verification
 # required_version: 2.7.0
 
 enabled_site_setting :discourse_github_verification_enabled
