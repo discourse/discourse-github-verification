@@ -45,11 +45,15 @@ module GithubVerification
           t.response :json
         end
 
-      response = conn.post("/login/oauth/access_token", {
-        client_id: SiteSetting.discourse_github_verification_client_id,
-        client_secret: SiteSetting.discourse_github_verification_client_secret,
-        code: params[:code],
-      })
+      response =
+        conn.post(
+          "/login/oauth/access_token",
+          {
+            client_id: SiteSetting.discourse_github_verification_client_id,
+            client_secret: SiteSetting.discourse_github_verification_client_secret,
+            code: params[:code],
+          },
+        )
 
       response_body = Rack::Utils.parse_nested_query(response.body)
       response_body["access_token"]
