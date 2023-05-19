@@ -20,4 +20,14 @@ require_relative "lib/github_verification/engine"
 
 after_initialize do
   allow_public_user_custom_field GithubVerification::VERIFIED_GITHUB_USERNAME_FIELD
+
+  add_to_serializer(
+    :site,
+    :github_verification_enabled,
+    include_condition: -> do
+      SiteSetting.discourse_github_verification_enabled &&
+        SiteSetting.discourse_github_verification_client_id.present? &&
+        SiteSetting.discourse_github_verification_client_secret.present?
+    end,
+  ) { true }
 end

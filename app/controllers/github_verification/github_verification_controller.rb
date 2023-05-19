@@ -4,6 +4,7 @@ module GithubVerification
   class GithubVerificationController < ::ApplicationController
     requires_plugin GithubVerification::PLUGIN_NAME
 
+    before_action :ensure_settings_are_present
     before_action :find_user
     skip_before_action :check_xhr, only: :auth_callback
 
@@ -32,6 +33,14 @@ module GithubVerification
     end
 
     private
+
+    def ensure_settings_are_present
+      if !SiteSetting.discourse_github_verification_enabled ||
+        SiteSetting.discourse_github_verification_client_id.blank? ||
+        SiteSetting.discourse_github_verification_client_secret.blank?
+        raise Discourse::NotFound
+      end
+    end
 
     def find_user
       @user = User.find_by(id: params[:user_id])

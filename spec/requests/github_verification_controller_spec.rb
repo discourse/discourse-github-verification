@@ -6,7 +6,37 @@ RSpec.describe GithubVerification::GithubVerificationController do
   fab!(:user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
 
+  before do
+    SiteSetting.discourse_github_verification_enabled = true
+    SiteSetting.discourse_github_verification_client_id = "aa"
+    SiteSetting.discourse_github_verification_client_secret = "bb"
+  end
+
+  shared_examples_for "improper_setup" do
+    before { sign_in(user) }
+
+    it "404s when `discourse_github_verification_enabled` is false" do
+      SiteSetting.discourse_github_verification_enabled = false
+      expect(make_request).to eq(404)
+    end
+
+    it "404s when `discourse_github_verification_client_id` is blank" do
+      SiteSetting.discourse_github_verification_client_id = ""
+      expect(make_request).to eq(404)
+    end
+    it "404s when `discourse_github_verification_client_secret` is blank" do
+      SiteSetting.discourse_github_verification_client_secret = ""
+      expect(make_request).to eq(404)
+    end
+  end
+
   describe "#auth_callback" do
+    it_behaves_like "improper_setup" do
+      def make_request
+        get "/github-verification", params: { user_id: user.id, code: "abc" }
+      end
+    end
+
     before do
       stub_request(:post, "https://github.com/login/oauth/access_token").to_return(
         status: 200,
@@ -54,6 +84,12 @@ RSpec.describe GithubVerification::GithubVerificationController do
   end
 
   describe "#clear_for_user" do
+    it_behaves_like "improper_setup" do
+      def make_request
+        delete "/github-verification/clear/#{user.id}.json"
+      end
+    end
+
     it "errors when user isn't signed in" do
       delete "/github-verification/clear/#{user.id}.json"
 

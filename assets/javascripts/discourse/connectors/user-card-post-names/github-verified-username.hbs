@@ -1,4 +1,4 @@
-{{#if this.user.custom_fields.github_verified_username}}
+{{#if (and this.site.github_verification_enabled this.user.custom_fields.github_verified_username)}}
   <GithubUserLink
     @username={{this.user.custom_fields.github_verified_username}}
   />
