@@ -36,8 +36,8 @@ module GithubVerification
 
     def ensure_settings_are_present
       if !SiteSetting.discourse_github_verification_enabled ||
-        SiteSetting.discourse_github_verification_client_id.blank? ||
-        SiteSetting.discourse_github_verification_client_secret.blank?
+           SiteSetting.discourse_github_verification_client_id.blank? ||
+           SiteSetting.discourse_github_verification_client_secret.blank?
         raise Discourse::NotFound
       end
     end
