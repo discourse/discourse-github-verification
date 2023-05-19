@@ -1,1 +1,5 @@
 en:
+  site_settings:
+    discourse_github_verification_enabled: "Enable GitHub Verification plugin. Requires discourse_github_verification_client_id and discourse_github_verification_client_secret."
+    discourse_github_verification_client_id: "GitHub OAuth app client ID"
+    discourse_github_verification_client_secret: "GitHub OAuth app client secret"
