@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { action } from "@ember/object";
+import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { tracked } from "@glimmer/tracking";
@@ -13,9 +14,7 @@ export default class PreferencesGithubController extends Controller {
 
   @action
   login() {
-    return ajax(`/github-verification/auth_url`).then((response) => {
-      window.location = response.url;
-    });
+    window.location = getAbsoluteURL("/github-verification/auth-url");
   }
 
   @action

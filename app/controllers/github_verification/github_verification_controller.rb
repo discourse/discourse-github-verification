@@ -7,7 +7,7 @@ module GithubVerification
     before_action :ensure_settings_are_present
     before_action :find_user, only: %i[auth_callback clear_for_user]
     before_action :ensure_admin, only: :list_users
-    skip_before_action :check_xhr, only: :auth_callback
+    skip_before_action :check_xhr, only: %i[auth_callback auth_url]
 
     def auth_url
       raise Discourse::NotFound if !current_user
@@ -16,10 +16,8 @@ module GithubVerification
       state = SecureRandom.hex
       session[:github_verification_state] = state
 
-      render json: {
-               url:
-                 "https://github.com/login/oauth/authorize?client_id=#{SiteSetting.discourse_github_verification_client_id}&redirect_uri=#{redirect_url}&state=#{state}",
-             }
+      redirect_to "https://github.com/login/oauth/authorize?client_id=#{SiteSetting.discourse_github_verification_client_id}&redirect_uri=#{redirect_url}&state=#{state}",
+                  allow_other_host: true
     end
 
     def auth_callback
