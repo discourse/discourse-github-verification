@@ -5,14 +5,33 @@ module GithubVerification
     requires_plugin GithubVerification::PLUGIN_NAME
 
     before_action :ensure_settings_are_present
-    before_action :find_user
+    before_action :find_user, only: [:auth_callback, :clear_for_user]
     skip_before_action :check_xhr, only: :auth_callback
 
+    def auth_url
+      raise Discourse::NotFound if !current_user
+
+      redirect_url = path("/github-verification?user_id=#{current_user.id}")
+      code = SecureRandom.hex
+      session[:github_verification_code] = code
+
+      render json: {
+        url: "https://github.com/login/oauth/authorize?client_id=#{SiteSetting.discourse_github_verification_client_id}&redirect_url=#{redirect_url}&state=#{code}"
+      }
+    end
+
     def auth_callback
+      puts '%%%%%%%%%%'
+      puts 'wat'
+      puts '%%%%%%%%%%'
       # We already checked if the user can edit the other user, but now lets make
       # sure that even admin don't connect a GitHub account on behalf of another user.
       raise Discourse::NotFound if current_user.id != @user.id
 
+      puts '#################'
+      puts params.inspect
+      puts session[:github_verification_code].inspect
+      puts '#################'
       access_code = fetch_access_code
       github_username = fetch_username(access_code)
       if github_username.blank?

@@ -14,10 +14,9 @@ export default class PreferencesGithubController extends Controller {
 
   @action
   login() {
-    let redirectURL = getAbsoluteURL(
-      `/github-verification?user_id=${this.model.id}`
-    );
-    window.location = `https://github.com/login/oauth/authorize?client_id=${this.siteSettings.discourse_github_verification_client_id}&redirect_uri=${redirectURL}`;
+    return ajax(`/github-verification/auth_url`).then((response) => {
+      window.location = response.url
+    });
   }
 
   @action
