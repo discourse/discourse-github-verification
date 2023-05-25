@@ -30,6 +30,28 @@ RSpec.describe GithubVerification::GithubVerificationController do
     end
   end
 
+  describe "#auth_url" do
+    it_behaves_like "improper_setup" do
+      def make_request
+        get "/github-verification/auth-url.json", params: { user_id: user.id }
+      end
+    end
+
+    it "responds with the correct OAuth URL for GitHub" do
+      sign_in(user)
+
+      get "/github-verification/auth_url.json"
+
+      expect(response.parsed_body["url"]).to start_with("https://github.com/login/oauth/authorize?")
+      expect(response.parsed_body["url"]).to include("client_id=aa")
+      expect(response.parsed_body["url"]).to include(
+        "redirect_uri=http://test.localhost/github-verification",
+      )
+      expect(response.parsed_body["url"]).to include("user_id=#{user.id}")
+      expect(response.parsed_body["url"]).to include("state=#{session[:github_verification_state]}")
+    end
+  end
+
   describe "#auth_callback" do
     it_behaves_like "improper_setup" do
       def make_request
