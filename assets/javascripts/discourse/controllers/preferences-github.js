@@ -1,8 +1,8 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { ajax } from "discourse/lib/ajax";
 import { action } from "@ember/object";
+import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { tracked } from "@glimmer/tracking";
@@ -14,10 +14,7 @@ export default class PreferencesGithubController extends Controller {
 
   @action
   login() {
-    let redirectURL = getAbsoluteURL(
-      `/github-verification?user_id=${this.model.id}`
-    );
-    window.location = `https://github.com/login/oauth/authorize?client_id=${this.siteSettings.discourse_github_verification_client_id}&redirect_uri=${redirectURL}`;
+    window.location = getAbsoluteURL("/github-verification/auth-url");
   }
 
   @action

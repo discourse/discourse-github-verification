@@ -30,6 +30,24 @@ RSpec.describe GithubVerification::GithubVerificationController do
     end
   end
 
+  describe "#auth_url" do
+    it_behaves_like "improper_setup" do
+      def make_request
+        get "/github-verification/auth-url", params: { user_id: user.id }
+      end
+    end
+
+    it "responds with the correct OAuth URL for GitHub" do
+      sign_in(user)
+
+      get "/github-verification/auth-url"
+
+      expect(response).to redirect_to(
+        "https://github.com/login/oauth/authorize?client_id=aa&redirect_uri=http://test.localhost/github-verification?user_id=#{user.id}&state=#{session[:github_verification_state]}",
+      )
+    end
+  end
+
   describe "#auth_callback" do
     it_behaves_like "improper_setup" do
       def make_request
@@ -116,6 +134,31 @@ RSpec.describe GithubVerification::GithubVerificationController do
       expect(
         user.reload.custom_fields[GithubVerification::VERIFIED_GITHUB_USERNAME_FIELD],
       ).to be_nil
+    end
+  end
+
+  describe "#users" do
+    it "serializes all the users with github account connected" do
+      user.custom_fields[GithubVerification::VERIFIED_GITHUB_USERNAME_FIELD] = "markvanlan"
+      user.save!
+
+      third_user = Fabricate(:user)
+      third_user.custom_fields[GithubVerification::VERIFIED_GITHUB_USERNAME_FIELD] = "test2"
+      third_user.save!
+
+      sign_in(Fabricate(:admin))
+
+      get "/github-verification/users.json"
+
+      expect(response.parsed_body.count).to eq(2)
+
+      expect(response.parsed_body.detect { |row| row["id"] == user.id }["github_username"]).to eq(
+        "markvanlan",
+      )
+
+      expect(
+        response.parsed_body.detect { |row| row["id"] == third_user.id }["github_username"],
+      ).to eq("test2")
     end
   end
 end

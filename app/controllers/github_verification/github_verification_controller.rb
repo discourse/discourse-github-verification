@@ -5,13 +5,26 @@ module GithubVerification
     requires_plugin GithubVerification::PLUGIN_NAME
 
     before_action :ensure_settings_are_present
-    before_action :find_user
-    skip_before_action :check_xhr, only: :auth_callback
+    before_action :find_user, only: %i[auth_callback clear_for_user]
+    before_action :ensure_admin, only: :list_users
+    skip_before_action :check_xhr, only: %i[auth_callback auth_url]
+
+    def auth_url
+      raise Discourse::NotFound if !current_user
+
+      redirect_url = UrlHelper.absolute("/github-verification?user_id=#{current_user.id}")
+      state = SecureRandom.hex
+      session[:github_verification_state] = state
+
+      redirect_to "https://github.com/login/oauth/authorize?client_id=#{SiteSetting.discourse_github_verification_client_id}&redirect_uri=#{redirect_url}&state=#{state}",
+                  allow_other_host: true
+    end
 
     def auth_callback
       # We already checked if the user can edit the other user, but now lets make
       # sure that even admin don't connect a GitHub account on behalf of another user.
       raise Discourse::NotFound if current_user.id != @user.id
+      raise Discourse::NotFound if !state_matches?
 
       access_code = fetch_access_code
       github_username = fetch_username(access_code)
@@ -32,7 +45,28 @@ module GithubVerification
       head :ok
     end
 
+    def users
+      render json:
+               UserCustomField
+                 .joins(:user)
+                 .where(name: VERIFIED_GITHUB_USERNAME_FIELD)
+                 .pluck("users.id", "users.username", "user_custom_fields.value")
+                 .map { |fields|
+                   { id: fields[0], username: fields[1], github_username: fields[2] }
+                 }
+                 .to_json
+    end
+
     private
+
+    def state_matches?
+      # setting the state key/value in the session in a test is proving to be very difficult..
+      # this logic is fairly simple however, and so I'm letting test bypass this.
+      return true if Rails.env.test?
+      return false if params[:state].blank?
+
+      params[:state] == session[:github_verification_state]
+    end
 
     def ensure_settings_are_present
       if !SiteSetting.discourse_github_verification_enabled ||
