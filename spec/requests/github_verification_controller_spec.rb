@@ -140,4 +140,29 @@ RSpec.describe GithubVerification::GithubVerificationController do
       ).to be_nil
     end
   end
+
+  describe "#users" do
+    it "serializes all the users with github account connected" do
+      user.custom_fields[GithubVerification::VERIFIED_GITHUB_USERNAME_FIELD] = "markvanlan"
+      user.save!
+
+      third_user = Fabricate(:user)
+      third_user.custom_fields[GithubVerification::VERIFIED_GITHUB_USERNAME_FIELD] = "test2"
+      third_user.save!
+
+      sign_in(Fabricate(:admin))
+
+      get "/github-verification/users.json"
+
+      expect(response.parsed_body.count).to eq(2)
+
+      expect(response.parsed_body.detect { |row| row["id"] == user.id }["github_username"]).to eq(
+        "markvanlan",
+      )
+
+      expect(
+        response.parsed_body.detect { |row| row["id"] == third_user.id }["github_username"],
+      ).to eq("test2")
+    end
+  end
 end

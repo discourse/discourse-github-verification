@@ -6,6 +6,7 @@ module GithubVerification
 
     before_action :ensure_settings_are_present
     before_action :find_user, only: %i[auth_callback clear_for_user]
+    before_action :ensure_admin, only: :list_users
     skip_before_action :check_xhr, only: :auth_callback
 
     def auth_url
@@ -44,6 +45,18 @@ module GithubVerification
       @user.save!
 
       head :ok
+    end
+
+    def users
+      render json:
+               UserCustomField
+                 .joins(:user)
+                 .where(name: VERIFIED_GITHUB_USERNAME_FIELD)
+                 .pluck("users.id", "users.username", "user_custom_fields.value")
+                 .map { |fields|
+                   { id: fields[0], username: fields[1], github_username: fields[2] }
+                 }
+                 .to_json
     end
 
     private
