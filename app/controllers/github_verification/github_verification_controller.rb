@@ -22,7 +22,7 @@ module GithubVerification
       @user.custom_fields[VERIFIED_GITHUB_USERNAME_FIELD] = github_username
       @user.save!
 
-      redirect_to "/u/#{@user.username}/preferences/github"
+      redirect_to path("/u/#{@user.username}/preferences/github")
     end
 
     def clear_for_user
