@@ -12,7 +12,7 @@ module GithubVerification
     def auth_url
       raise Discourse::NotFound if !current_user
 
-      redirect_url = UrlHelper.absolute("/github-verification?user_id=#{current_user.id}")
+      redirect_url = "#{Discourse.base_url}/github-verification?user_id=#{current_user.id}"
       state = SecureRandom.hex
       session[:github_verification_state] = state
 
