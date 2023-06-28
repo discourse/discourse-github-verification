@@ -35,7 +35,7 @@ module GithubVerification
       @user.custom_fields[VERIFIED_GITHUB_USERNAME_FIELD] = github_username
       @user.save!
 
-      DiscourseEvent.trigger(:user_updated, user)
+      DiscourseEvent.trigger(:user_updated, @user)
 
       redirect_to path("/u/#{@user.username}/preferences/github")
     end
@@ -44,7 +44,7 @@ module GithubVerification
       @user.custom_fields.delete(VERIFIED_GITHUB_USERNAME_FIELD)
       @user.save!
 
-      DiscourseEvent.trigger(:user_updated, user)
+      DiscourseEvent.trigger(:user_updated, @user)
 
       head :ok
     end
