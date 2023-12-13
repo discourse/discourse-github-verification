@@ -1,5 +1,5 @@
-import RestrictedUserRoute from "discourse/routes/restricted-user";
 import { defaultHomepage } from "discourse/lib/utilities";
+import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default class PreferencesChatRoute extends RestrictedUserRoute {
   beforeModel() {

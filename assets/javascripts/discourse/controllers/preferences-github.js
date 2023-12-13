@@ -1,11 +1,11 @@
-import Controller from "@ember/controller";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import { action } from "@ember/object";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import { inject as service } from "@ember/service";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { tracked } from "@glimmer/tracking";
+import Controller from "@ember/controller";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getAbsoluteURL } from "discourse-common/lib/get-url";
+import I18n from "I18n";
 
 export default class PreferencesGithubController extends Controller {
   @service siteSettings;
