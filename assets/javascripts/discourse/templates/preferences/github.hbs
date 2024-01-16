@@ -8,9 +8,9 @@
         <GithubUserLink @username={{this.githubUsername}} />
         <DButton
           @action={{this.clear}}
-          @class="btn-secondary clear-github-verification-btn"
           @icon="trash-alt"
           @title="discourse_github_verification.clear"
+          class="btn-secondary clear-github-verification-btn"
         />
       </div>
       <p class="instructions">
@@ -21,8 +21,8 @@
         <DButton
           @action={{this.login}}
           @icon="fab-github"
-          @class="btn-primary github-verification-btn"
           @label="discourse_github_verification.connect"
+          class="btn-primary github-verification-btn"
         />
         <p class="instructions">
           {{i18n "discourse_github_verification.instructions.connect"}}
