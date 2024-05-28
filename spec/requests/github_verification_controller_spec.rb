@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe GithubVerification::GithubVerificationController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:other_user) { Fabricate(:user) }
 
   before do
