@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import { getAbsoluteURL } from "discourse/lib/get-url";
+import { i18n } from "discourse-i18n";
 
 export default class PreferencesGithubController extends Controller {
   @service siteSettings;
@@ -20,7 +20,7 @@ export default class PreferencesGithubController extends Controller {
   @action
   clear() {
     this.dialog.confirm({
-      message: I18n.t("discourse_github_verification.clear_confirmation"),
+      message: i18n("discourse_github_verification.clear_confirmation"),
       didConfirm: () => {
         ajax(`/github-verification/clear/${this.model.id}`, {
           method: "DELETE",
