@@ -10,6 +10,7 @@ import { i18n } from "discourse-i18n";
 export default class PreferencesGithubController extends Controller {
   @service siteSettings;
   @service dialog;
+
   @tracked githubUsername = this.model.custom_fields.github_verified_username;
 
   @action
