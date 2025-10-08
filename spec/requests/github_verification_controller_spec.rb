@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe GithubVerification::GithubVerificationController do
   fab!(:user)
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
 
   before do
     SiteSetting.discourse_github_verification_enabled = true
