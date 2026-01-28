@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe GithubVerification::GithubVerificationController do
   fab!(:user)
   fab!(:other_user, :user)
